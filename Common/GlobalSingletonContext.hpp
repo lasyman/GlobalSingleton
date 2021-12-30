@@ -13,7 +13,11 @@ public:
         if (!manager.Load(SingletonManagerLibrary)) {
             std::string except = "The singleton manager library `" +
                 SingletonManagerLibrary + "` does not exist!";
+#ifdef _WIN32
             throw std::exception(except.c_str());
+#else
+            throw std::logic_error(except.c_str());
+#endif
         }
     }
 
@@ -25,7 +29,11 @@ public:
         T* instance = manager.ExecuteFunction<T*(size_t, size_t)>(
             "Obtain", typeid(T).hash_code(), sizeof(T));
         if (!instance) {
+#ifdef _WIN32
             throw std::exception("The singleton internal fatal!");
+#else
+            throw std::logic_error("The singleton internal fatal!");
+#endif
         }
         if (construct) {
             new(instance) T;

@@ -1,5 +1,6 @@
 #include <typeinfo>
 #include <unordered_map>
+#include <vector>
 
 #ifdef _MSC_VER
 #define SGT_API_EXPORT __declspec(dllexport)

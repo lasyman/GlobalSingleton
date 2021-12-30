@@ -16,8 +16,19 @@
 //    若在SingletonManager.cpp的Count/Obtain/Release函数中使用std::mutex加锁能够实现
 //    单例获取的安全，但实例化过程(创建过程)仍是线程不安全的。
 
+void pause()
+{
+#ifdef _WIN32
+	system("pause");
+#else
+#include<stdio.h>
+	getchar();
+#endif
+}
+
 int main(int argc, char* argv[])
 {
+	pause();
     //GlobalTestExe::GetReference().Test(); // 单例由exe加载
 
     DllWrapper dll1, dll2;
@@ -34,7 +45,8 @@ int main(int argc, char* argv[])
     // 用于测试如果该函数设置为virtual，而第一次加载者为dll1
     // 而不是dll2，此时dll1已卸载，调用虚函数会出现崩溃
     //dll2.ExecuteFunction<void()>("TestDll2Run");
-
+	pause();
     GlobalTestExe::GetReference().Test();
+	pause();
     return 0;
 }

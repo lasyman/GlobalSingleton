@@ -17,6 +17,7 @@
 #define LIB_PREN             ""
 #else
 #include <dlfcn.h>
+#include <stdexcept>
 #define LIB_LIBRARY          void*
 #define LIB_PROCESS          void*
 #define LIB_INVALID_LIBRARY  nullptr
@@ -25,7 +26,7 @@
 #define LIB_UNLD(inst)       dlclose(inst)
 #define LIB_SYMB(inst, func) dlsym(inst, func)
 #define LIB_EXTN             ".so"
-#define LIB_PREN             "lib"
+#define LIB_PREN             "./lib"
 #endif
 
 class DllWrapper final {
@@ -88,7 +89,11 @@ public:
         auto fn = GetFunction<Func>(func);
         if (fn == nullptr) {
             std::string except = "Cannot find function: " + func;
+#ifdef _WIN32
             throw std::exception(except.c_str());
+#else
+            throw std::logic_error(except.c_str());
+#endif
         }
         return fn(std::forward<Args>(args)...);
     }
